@@ -1,0 +1,10 @@
+site_name: New Project
+repo_url: https://github.com/Dragonflip/new-project
+repo_name: Dragonflip/new-project
+edit_uri: tree/master/docs
+
+theme:
+  name: material
+  language: pt-BR
+  logo: assets/logo.png
+  favicon: assets/logo.png
