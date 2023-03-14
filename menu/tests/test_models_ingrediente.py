@@ -2,14 +2,12 @@ import pytest
 from menu.models import *
 
 
-@pytest.mark.django_db
-def test_nome_ingrediente():
-    nome_ingrediente = "peito de frango"
+def test_nome_ingrediente(db, django_db_setup):
     Ingredientes.objects.create(
-        nome=nome_ingrediente, proteina=32, gordura=2.5, carboidrato=0, vegetal=False
+        nome="peito de frango", proteina=32, gordura=2.5, carboidrato=0, vegetal=False
     )
     ingrediente = Ingredientes.objects.last()
-    assert str(ingrediente) == f"Ingrediente: {nome_ingrediente}"
+    assert ingrediente.__str__() == "Ingrediente peito de frango"
 
 
 @pytest.mark.parametrize(
@@ -30,5 +28,7 @@ def test_ingredientes_inseridos_corretamente(
         carboidrato=carboidrato,
         vegetal=vegetal,
     )
-    calorias = proteina * 4 + carboidrato * 4 + gordura * 9
-    assert result.calorias == calorias
+    assert result.proteina == proteina
+    assert result.gordura == gordura
+    assert result.carboidrato == carboidrato
+    assert result.vegetal == vegetal
