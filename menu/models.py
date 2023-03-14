@@ -27,6 +27,7 @@ class Item(models.Model):
     porcao = models.IntegerField()
     alcoolico = models.BooleanField(default=False)
     item_media_id = models.ForeignKey(ItemMedia, on_delete=models.CASCADE, default=None, null=True)
+    ingredientes = models.ManyToManyField(Ingredientes, null=True)
 
     def __str__(self):
         return self.nome
