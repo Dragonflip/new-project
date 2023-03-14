@@ -15,7 +15,6 @@ def generate_test_image():
     file.seek(0)
     yield file
     shutil.rmtree('items')
-        
 
 
 def test_nome_item_media(db, django_db_setup, generate_test_image):

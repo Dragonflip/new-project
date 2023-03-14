@@ -19,6 +19,7 @@ class ItemMedia(models.Model):
     def __str__(self):
         return self.title
 
+
 class Item(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.CharField(max_length=500)

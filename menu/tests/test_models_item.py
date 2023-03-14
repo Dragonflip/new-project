@@ -40,3 +40,6 @@ def test_items_inseridos_corretamente(
     assert porcao == porcao
     assert alcoolico == alcoolico
 
+
+def test_se_ingredientes_sao_veganos_item_e_vegano():
+    ...
