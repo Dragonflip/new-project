@@ -1,10 +1,16 @@
 import pytest
 from menu.models import *
+import tempfile
 from PIL import Image
 from io import  BytesIO
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
 import shutil
 
+
+#ajustando MEDIA_ROOT para que os arquivos de testes sejam diferentes dos arquivos de dev
+MEDIA_ROOT = tempfile.mkdtemp()
+settings.MEDIA_ROOT = MEDIA_ROOT
 
 @pytest.fixture()
 def generate_test_image():
@@ -14,10 +20,11 @@ def generate_test_image():
     file.name = 'test.png'
     file.seek(0)
     yield file
-    shutil.rmtree('items')
+    shutil.rmtree(MEDIA_ROOT, ignore_errors=True)
 
 
-def test_nome_item_media(db, django_db_setup, generate_test_image):
+@pytest.mark.django_db
+def test_nome_item_media(generate_test_image):
     test_image = SimpleUploadedFile(
         name='test.png',
         content=generate_test_image.read(),
