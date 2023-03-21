@@ -14,3 +14,8 @@ class UserSerializer(serializers.Serializer):
         instance = super().to_internal_value(user)
         user_dc = services.UserDataClass(**instance)
         return user_dc
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
