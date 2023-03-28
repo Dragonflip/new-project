@@ -12,7 +12,7 @@ class RegisterApi(views.APIView):
         try:
             serializer.instance = services.create_user(data)
         except Exception as e:
-            raise exceptions.APIException(str(e))
+            raise exceptions.ValidationError(str(e))
 
         resp = response.Response(data=serializer.data)
         resp.status_code = 201

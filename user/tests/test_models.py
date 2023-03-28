@@ -1,6 +1,6 @@
 import pytest
 from user.models import Client
-from .fixtures import test_user
+from user.tests.fixtures import test_user
 
 
 @pytest.mark.django_db

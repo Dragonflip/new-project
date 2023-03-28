@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Ingredientes(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, unique=True)
     proteina = models.DecimalField(max_digits=5, decimal_places=2)
     gordura = models.DecimalField(max_digits=5, decimal_places=2)
     carboidrato = models.DecimalField(max_digits=5, decimal_places=2)
@@ -13,7 +13,7 @@ class Ingredientes(models.Model):
 
 
 class ItemMedia(models.Model):
-    title = models.CharField(max_length=100, default=None)
+    title = models.CharField(max_length=100, default=None, unique=True)
     imagem = models.ImageField(upload_to='items')
 
     def __str__(self):
@@ -21,7 +21,7 @@ class ItemMedia(models.Model):
 
 
 class Item(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, unique=True)
     descricao = models.CharField(max_length=500)
     preco = models.DecimalField(max_digits=5, decimal_places=2)
     tempo_preparacao = models.IntegerField()
@@ -44,7 +44,7 @@ class Item(models.Model):
 
 
 class MenuMedia(models.Model):
-    nome = models.CharField(max_length=100, default=None)
+    nome = models.CharField(max_length=100, default=None, unique=True)
     imagem = models.ImageField(upload_to='menu_image')
 
     def __str__(self):
@@ -52,14 +52,14 @@ class MenuMedia(models.Model):
 
 
 class MenuCategoria(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, unique=True)
     descricao = models.CharField(max_length=500)
 
     def __str__(self):
         return self.nome
 
 class Menu(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, unique=True)
     descricao = models.CharField(max_length=500)
     disponivel = models.BooleanField(default=True)
     categoria = models.ForeignKey(MenuCategoria, on_delete=models.CASCADE, blank=True, null=True)

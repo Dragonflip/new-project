@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . import services
+from user.dto import UserDataClass
 
 
 class UserSerializer(serializers.Serializer):
@@ -12,7 +12,7 @@ class UserSerializer(serializers.Serializer):
 
     def to_internal_value(self, user):
         instance = super().to_internal_value(user)
-        user_dc = services.UserDataClass(**instance)
+        user_dc = UserDataClass(**instance)
         return user_dc
 
 

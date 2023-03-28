@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 from django.conf import settings
 from rest_framework.test import APIClient
-from .fixtures import test_user
+from user.tests.fixtures import test_user
 import jwt
 
 
@@ -25,7 +25,7 @@ def test_registration_user():
 
 
 @pytest.mark.django_db
-def test_se_username_ja_existe_retorna_500(test_user):
+def test_se_username_ja_existe_retorna_400(test_user):
     payload = {
         'username': test_user.username,
         'first_name': 'joao',
@@ -37,7 +37,7 @@ def test_se_username_ja_existe_retorna_500(test_user):
     url = reverse('register') 
     response = client.post(url, payload)
 
-    assert response.status_code == 500
+    assert response.status_code == 400
 
 
 @pytest.mark.django_db

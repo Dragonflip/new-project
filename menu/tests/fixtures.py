@@ -38,7 +38,7 @@ def ingrediente_nao_vegano():
 @pytest.fixture()
 def ingrediente_vegano():
     ingrediente = Ingredientes.objects.create(
-            nome='a',
+            nome='b',
             proteina=1,
             gordura=0,
             carboidrato=0,

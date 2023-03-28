@@ -1,6 +1,6 @@
 import pytest
 from menu.models import *
-from fixtures import (
+from menu.tests.fixtures import (
         item_vegano,
         item_nao_vegano,
         ingrediente_vegano,

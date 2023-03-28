@@ -1,7 +1,7 @@
 import pytest
 from menu.models import *
 from django.core.files.uploadedfile import SimpleUploadedFile
-from fixtures import generate_test_image
+from menu.tests.fixtures import generate_test_image
 
 
 @pytest.mark.django_db

@@ -1,30 +1,9 @@
 import datetime
 import jwt
 from django.conf import settings
-import dataclasses
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from typing import Any
-
-
-@dataclasses.dataclass
-class UserDataClass:
-    username: str
-    first_name: str
-    last_name: str
-    email: str
-    id: int | Any = None
-    password: str | Any = None
-
-    @classmethod
-    def from_instance(cls, user: User):
-        return cls(
-            username=user.username,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            email=user.email,
-            id=user.id,
-        )
+from user.dto import UserDataClass
 
 
 def create_user(user: UserDataClass):

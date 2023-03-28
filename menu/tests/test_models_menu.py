@@ -1,5 +1,5 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
-from fixtures import generate_test_image
+from menu.tests.fixtures import generate_test_image
 import pytest
 from menu.models import Menu, MenuCategoria, MenuMedia
 
