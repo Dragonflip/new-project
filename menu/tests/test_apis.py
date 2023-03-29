@@ -3,12 +3,13 @@ from django.urls import reverse
 from django.conf import settings
 from rest_framework.test import APIClient
 from menu.models import Ingredientes
-from menu.tests.fixtures import ingrediente_vegano, ingrediente_nao_vegano
+from menu.tests.fixtures import ingrediente_vegano, ingrediente_nao_vegano, item_vegano
 import jwt
 
 
 client = APIClient()
 
+#test ingredientes
 @pytest.mark.django_db
 def test_create_ingrediente():
     payload = {
@@ -120,3 +121,24 @@ def test_patch_para_nome_ja_existente_retorna_400(ingrediente_vegano, ingredient
     response = client.patch(url, payload)
 
     assert response.status_code == 400
+
+#test item
+@pytest.mark.django_db
+def test_create_item(ingrediente_vegano):
+    payload = {
+        'nome': 'a',
+        'descricao': 'a',
+        'preco': 20,
+        'tempo_preparacao': 20,
+        'porcao': 1,
+        'alcoolico': False,
+    }
+    
+    url = reverse('item')
+    response = client.post(url, payload)
+
+    assert response.status_code == 201
+
+@pytest.mark.django_db
+def test_get_deve_retornar_todos_items(item_vegano):
+    ...
