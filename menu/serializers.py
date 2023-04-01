@@ -21,6 +21,9 @@ class IngredienteSerializer(serializers.ModelSerializer):
     class Meta:
         model=Ingredientes
         fields = '__all__'
+        extra_kwargs = {
+            'nome': {'validators': []},
+        }
 
 class ItemMediaSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
@@ -29,21 +32,31 @@ class ItemMediaSerializer(serializers.Serializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     ingredientes = IngredienteSerializer(required=False, many=True)
-    media = serializers.ImageField(required=False)
+    media = ItemMediaSerializer(required=False)
 
     def to_internal_value(self, item):
 
         if self.instance and self.partial:
-            ingrediente = {
+
+            media = None
+            if self.instance.media:
+                media = {
+                    'title': self.instance.media.title,
+                    'imagem': self.instance.media.imagem
+                }
+
+            item_internal = {
                 'nome': item.get('nome') or self.instance.nome,
                 'descricao': item.get('descricao') or self.instance.descricao,
                 'preco': item.get('preco') or self.instance.preco,
                 'tempo_preparacao': item.get('tempo_preparacao') or self.instance.tempo_preparacao,
                 'porcao': item.get('porcao') or self.instance.porcao,
                 'alcoolico': item.get('alcoolico') or self.instance.alcoolico,
-                'media': item.get('media') or self.instance.media,
-                'ingredientes': item.get('ingredientes') or self.instance.ingredientes
+                'ingredientes': item.get('ingredientes') or [ingrediente for ingrediente in self.instance.ingredientes.all()]
             }
+
+            if item.get('media') or media:
+                item_internal['media'] = item.get('media') or media
 
         instance = super().to_internal_value(item)
         return instance

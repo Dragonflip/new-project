@@ -22,10 +22,10 @@ def test_item_api():
     url = reverse("item")
     api = resolve(url)
 
-    assert api.func.view_class == IngredienteApi
+    assert api.func.view_class == ItemApi
 
 def test_item_detail():
     url = reverse("item_detail", kwargs={'pk': 1})
     api = resolve(url)
 
-    assert api.func.view_class == IngredienteDetail
+    assert api.func.view_class == ItemDetail

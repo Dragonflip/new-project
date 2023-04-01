@@ -1,9 +1,10 @@
+from os import walk
 import pytest
 from django.urls import reverse
 from django.conf import settings
 from rest_framework.test import APIClient
-from menu.models import Ingredientes
-from menu.tests.fixtures import ingrediente_vegano, ingrediente_nao_vegano, item_vegano
+from menu.models import Ingredientes, Item
+from menu.tests.fixtures import ingrediente_vegano, ingrediente_nao_vegano, item_vegano, item_nao_vegano
 import jwt
 
 
@@ -147,7 +148,7 @@ def test_get_deve_retornar_todos_items(item_vegano):
     assert len(response.data) == 1
 
 @pytest.mark.django_db
-def test_put_deve_atualizar_o_item(ingrediente_vegano):
+def test_put_deve_atualizar_o_item(item_vegano):
 
     payload = {
         'nome': 'nome_teste',
@@ -155,16 +156,15 @@ def test_put_deve_atualizar_o_item(ingrediente_vegano):
         'preco': 20,
         'tempo_preparacao': 20,
         'porcao': 1,
-        'alcoolico': False,
-        'ingredientes': [
-            {'nome': ingrediente_vegano.nome}     
-        ],
+        'alcoolico': False
     }
     
     url = reverse('item_detail', kwargs={'pk':1})
     response = client.put(url, payload)
 
-    assert response.status_code == 200
+    item = Item.objects.first()
+
+    assert payload.get('nome') == item.nome
 
 @pytest.mark.django_db
 def test_put_nao_deve_permitir_nomes_repetidos(item_vegano, item_nao_vegano):
@@ -175,10 +175,7 @@ def test_put_nao_deve_permitir_nomes_repetidos(item_vegano, item_nao_vegano):
         'preco': 20,
         'tempo_preparacao': 20,
         'porcao': 1,
-        'alcoolico': False,
-        'ingredientes': [
-            {'nome':'a'}     
-        ],
+        'alcoolico': False
     }
     
     url = reverse('item_detail', kwargs={'pk':2})
@@ -187,7 +184,7 @@ def test_put_nao_deve_permitir_nomes_repetidos(item_vegano, item_nao_vegano):
     assert response.status_code == 400
 
 @pytest.mark.django_db
-def test_patch_deve_atualizar_o_item(ingrediente_vegano):
+def test_patch_deve_atualizar_o_item(item_vegano):
 
     payload = {
         'nome': 'nome_teste',
@@ -195,10 +192,7 @@ def test_patch_deve_atualizar_o_item(ingrediente_vegano):
         'preco': 20,
         'tempo_preparacao': 20,
         'porcao': 1,
-        'alcoolico': False,
-        'ingredientes': [
-            {'nome': ingrediente_vegano.nome}
-        ],
+        'alcoolico': False
     }
     
     url = reverse('item_detail', kwargs={'pk':1})

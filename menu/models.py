@@ -25,7 +25,7 @@ class Item(models.Model):
     tempo_preparacao = models.IntegerField()
     porcao = models.IntegerField()
     alcoolico = models.BooleanField(default=False)
-    media = models.ForeignKey(ItemMedia, on_delete=models.CASCADE, default=None, null=True)
+    media = models.ForeignKey(ItemMedia, on_delete=models.CASCADE, default=None, null=True, blank=True)
     ingredientes = models.ManyToManyField(Ingredientes, blank=True)
 
     @property

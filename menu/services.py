@@ -22,67 +22,94 @@ def update_ingrediente(data, instance):
 
     return instance
 
+def create_or_update_ingredientes(ingredientes_data):
+
+    ingredientes = []
+    for ingrediente_data in ingredientes_data:
+        ingrediente_instance = Ingredientes.objects.filter(
+            nome=ingrediente_data.get('nome')
+        ).first()
+
+        if ingrediente_instance:
+            ingrediente_instance = update_ingrediente(ingrediente_data, ingrediente_instance)
+            ingredientes.append(ingrediente_instance)
+        else:
+            ingrediente_instance = create_ingrediente(ingrediente_data)
+            ingredientes.append(ingrediente_instance)
+
+    return ingredientes
+
+def create_media(media):
+    instance = ItemMedia.objects.create(
+        title=media.get('title'),
+        imagem=media.get('imagem')
+    )
+    return instance
+
+def update_media(data, instance):
+    instance.title = data.get('title')
+    instance.imagem = data.get('imagem')
+    instance.save()
+
+    return instance
+
+def create_or_update_media(media_data):
+    media_instance = ItemMedia.objects.filter(
+        title=media_data.get('title')
+    ).first()
+
+    if media_instance:
+        media_instance = update_media(media_data, media_instance)
+    else:
+        media_instance = create_media(media_data)
+
+    return media_instance
+
 def create_item(item):
 
-    media = None
+    media_instance = None
     if item.get('media'):
-        media = item.pop('media')
+        media_data = item.pop('media')
+        media_instance = create_or_update_media(media_data)
 
-    ingredientes_data = []
+    ingredientes = None
     if item.get('ingredientes'):
-        ingredientes = item.pop('ingredientes')
+        ingredientes_data = item.pop('ingredientes')
+        ingredientes = create_or_update_ingredientes(ingredientes_data)
 
     item_instance = Item.objects.create(
         **item
     )
 
-    ingredientes = []
-    for ingrediente in ingredientes_data:
-        instance = Ingredientes.objects.create(
-            **ingrediente
-        )
-        ingredientes.append(instance)
+    if ingredientes:
+        item_instance.ingredientes.set(ingredientes)
+    
+    if media_instance:
+        item_instance.media = media_instance
 
-    if media:
-        instance = ItemMedia.objects.create(
-            title=item.get('nome'),
-            imagem=media
-        )
-        item_instance.media = instance
-
-    item_instance.ingredientes.set(ingredientes)
     item_instance.save()
 
     return item_instance
 
 def update_item(data, item):
 
-    media = None
     if data.get('media'):
-        media = item.pop('media')
+        media_data = data.pop('media')
+        media_instance = create_or_update_media(media_data)
+        item.media = media_instance
 
-    ingredientes_data = []
     if data.get('ingredientes'):
-        ingredientes = item.pop('ingredientes')
+        ingredientes_data = data.pop('ingredientes')
+        ingredientes = create_or_update_ingredientes(ingredientes_data)
+        item.ingredientes.set(ingredientes)
 
-    item.nome = data.get('nome')
-    item.descricao = data.get('descricao') 
-    item.preco = data.get('preco')
-    item.tempo_preparacao = data.get('tempo_preparacao')
-    item.porcao = data.get('porcao')
-    item.alcoolico = data.get('alcoolido')
+    item.nome = data.get('nome') or item.nome
+    item.descricao = data.get('descricao') or item.descricao
+    item.preco = data.get('preco') or item.preco
+    item.tempo_preparacao = data.get('tempo_preparacao') or item.tempo_preparacao
+    item.porcao = data.get('porcao') or item.porcao
+    item.alcoolico = data.get('alcoolico') or item.alcoolico
 
-    ingredientes = []
-    for ingrediente in ingredientes_data:
-        ingrediente_instance = Ingredientes.objects.get(
-            nome=ingrediente.nome
-        )
-        ingredientes.append(ingrediente_instance)
-        item.ingredientes = ingredientes
-
-    if media:
-        media_instance = ItemMedia.objects.get(
-            title=media.title
-        )
-        item.media=media_instance
     item.save()
+
+    return item
