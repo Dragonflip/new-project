@@ -16,5 +16,4 @@ def test_nome_item_media(generate_test_image):
         imagem=test_image
     )
     item_media = ItemMedia.objects.last()
-    print(item_media)
     assert item_media.__str__() == "foto do pastel de frango"

@@ -141,4 +141,79 @@ def test_create_item(ingrediente_vegano):
 
 @pytest.mark.django_db
 def test_get_deve_retornar_todos_items(item_vegano):
-    ...
+    url = reverse('item')
+    response = client.get(url)
+
+    assert len(response.data) == 1
+
+@pytest.mark.django_db
+def test_put_deve_atualizar_o_item(ingrediente_vegano):
+
+    payload = {
+        'nome': 'nome_teste',
+        'descricao': 'a',
+        'preco': 20,
+        'tempo_preparacao': 20,
+        'porcao': 1,
+        'alcoolico': False,
+        'ingredientes': [
+            {'nome': ingrediente_vegano.nome}     
+        ],
+    }
+    
+    url = reverse('item_detail', kwargs={'pk':1})
+    response = client.put(url, payload)
+
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_put_nao_deve_permitir_nomes_repetidos(item_vegano, item_nao_vegano):
+
+    payload = {
+        'nome': item_vegano.nome,
+        'descricao': 'a',
+        'preco': 20,
+        'tempo_preparacao': 20,
+        'porcao': 1,
+        'alcoolico': False,
+        'ingredientes': [
+            {'nome':'a'}     
+        ],
+    }
+    
+    url = reverse('item_detail', kwargs={'pk':2})
+    response = client.put(url, payload)
+
+    assert response.status_code == 400
+
+@pytest.mark.django_db
+def test_patch_deve_atualizar_o_item(ingrediente_vegano):
+
+    payload = {
+        'nome': 'nome_teste',
+        'descricao': 'a',
+        'preco': 20,
+        'tempo_preparacao': 20,
+        'porcao': 1,
+        'alcoolico': False,
+        'ingredientes': [
+            {'nome': ingrediente_vegano.nome}
+        ],
+    }
+    
+    url = reverse('item_detail', kwargs={'pk':1})
+    response = client.put(url, payload)
+
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_patch_nao_deve_permitir_nomes_repetidos(item_vegano, item_nao_vegano):
+
+    payload = {
+        'nome': item_vegano.nome,
+    }
+    
+    url = reverse('item_detail', kwargs={'pk':2})
+    response = client.put(url, payload)
+
+    assert response.status_code == 400

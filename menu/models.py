@@ -11,14 +11,12 @@ class Ingredientes(models.Model):
     def __str__(self):
         return self.nome
 
-
 class ItemMedia(models.Model):
     title = models.CharField(max_length=100, default=None, unique=True)
     imagem = models.ImageField(upload_to='items')
 
     def __str__(self):
         return self.title
-
 
 class Item(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -27,7 +25,7 @@ class Item(models.Model):
     tempo_preparacao = models.IntegerField()
     porcao = models.IntegerField()
     alcoolico = models.BooleanField(default=False)
-    item_media_id = models.ForeignKey(ItemMedia, on_delete=models.CASCADE, default=None, null=True)
+    media = models.ForeignKey(ItemMedia, on_delete=models.CASCADE, default=None, null=True)
     ingredientes = models.ManyToManyField(Ingredientes, blank=True)
 
     @property
@@ -42,7 +40,6 @@ class Item(models.Model):
     def __str__(self):
         return self.nome
 
-
 class MenuMedia(models.Model):
     nome = models.CharField(max_length=100, default=None, unique=True)
     imagem = models.ImageField(upload_to='menu_image')
@@ -50,12 +47,12 @@ class MenuMedia(models.Model):
     def __str__(self):
         return self.nome
 
-
 class MenuCategoria(models.Model):
     nome = models.CharField(max_length=100, unique=True)
     descricao = models.CharField(max_length=500)
 
     def __str__(self):
+
         return self.nome
 
 class Menu(models.Model):
