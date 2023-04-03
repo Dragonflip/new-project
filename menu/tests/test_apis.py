@@ -125,7 +125,14 @@ def test_patch_para_nome_ja_existente_retorna_400(ingrediente_vegano, ingredient
 
 #test item
 @pytest.mark.django_db
-def test_create_item(ingrediente_vegano):
+def test_get_deve_retornar_todos_items(item_vegano):
+    url = reverse('item')
+    response = client.get(url)
+
+    assert len(response.data) == 1
+
+@pytest.mark.django_db
+def test_create_item():
     payload = {
         'nome': 'a',
         'descricao': 'a',
@@ -141,11 +148,28 @@ def test_create_item(ingrediente_vegano):
     assert response.status_code == 201
 
 @pytest.mark.django_db
-def test_get_deve_retornar_todos_items(item_vegano):
+def test_nao_e_permitido_criar_item_com_nome_repetido(item_vegano):
+    payload = {
+        'nome': item_vegano.nome,
+        'descricao': 'a',
+        'preco': 20,
+        'tempo_preparacao': 20,
+        'porcao': 1,
+        'alcoolico': False,
+    }
+    
     url = reverse('item')
+    response = client.post(url, payload)
+
+    assert response.status_code == 400
+
+@pytest.mark.django_db
+def test_get_item(item_vegano):
+    
+    url = reverse('item_detail', kwargs={'pk':1})
     response = client.get(url)
 
-    assert len(response.data) == 1
+    assert response.data.get('nome') == item_vegano.nome
 
 @pytest.mark.django_db
 def test_put_deve_atualizar_o_item(item_vegano):
@@ -188,15 +212,10 @@ def test_patch_deve_atualizar_o_item(item_vegano):
 
     payload = {
         'nome': 'nome_teste',
-        'descricao': 'a',
-        'preco': 20,
-        'tempo_preparacao': 20,
-        'porcao': 1,
-        'alcoolico': False
     }
     
     url = reverse('item_detail', kwargs={'pk':1})
-    response = client.put(url, payload)
+    response = client.patch(url, payload)
 
     assert response.status_code == 200
 
@@ -208,6 +227,40 @@ def test_patch_nao_deve_permitir_nomes_repetidos(item_vegano, item_nao_vegano):
     }
     
     url = reverse('item_detail', kwargs={'pk':2})
-    response = client.put(url, payload)
+    response = client.patch(url, payload)
 
     assert response.status_code == 400
+
+@pytest.mark.django_db
+def test_delete_deve_remover_item(item_vegano):
+    
+    url = reverse('item_detail', kwargs={'pk':1})
+    response = client.delete(url)
+
+    assert len(Item.objects.all()) == 0
+
+@pytest.mark.django_db
+def test_criando_ingrediente_a_partir_do_item():
+    payload = {
+       "ingredientes":[
+          {
+             "nome":"testeee",
+             "proteina":12,
+             "gordura":10,
+             "carboidrato":1,
+             "vegetal":True
+          }
+       ],
+       "nome":"teste1",
+       "descricao":"aa",
+       "preco":20,
+       "tempo_preparacao":20,
+       "porcao":1,
+       "alcoolico":True
+    }
+    url = reverse('item')
+    response = client.post(url, payload)
+
+    ingredientes = Ingredientes.objects.all()
+
+    assert len(ingredientes) == 0

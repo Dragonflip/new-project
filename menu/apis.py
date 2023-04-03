@@ -81,12 +81,9 @@ class ItemApi(views.APIView):
     def post(self, request):
         serializer = ItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
 
-        try:
-            serializer.instance = create_item(data)
-        except Exception as e:
-            raise exceptions.ValidationError(e)
+        data = serializer.validated_data
+        serializer.instance = create_item(data)
 
         resp = response.Response(data=serializer.data)
         resp.status_code = 201
@@ -106,12 +103,9 @@ class ItemDetail(views.APIView):
 
         serializer = ItemSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
 
-        try:
-            serializer.instance = update_item(data, instance)
-        except Exception as e:
-            raise exceptions.ValidationError(e)
+        data = serializer.validated_data
+        serializer.instance = update_item(data, instance)
 
         return response.Response(data=serializer.data)
 
@@ -120,12 +114,9 @@ class ItemDetail(views.APIView):
 
         serializer = ItemSerializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
 
-        try:
-            serializer.instance = update_item(data, instance)
-        except Exception as e:
-            raise exceptions.ValidationError(e)
+        data = serializer.validated_data
+        serializer.instance = update_item(data, instance)
 
         return response.Response(data=serializer.data)
 

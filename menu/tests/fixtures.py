@@ -65,7 +65,7 @@ def item_vegano(ingrediente_vegano):
 @pytest.fixture()
 def item_nao_vegano(ingrediente_vegano, ingrediente_nao_vegano):
     item = Item.objects.create(
-        nome='a',
+        nome='b',
         descricao='a',
         preco=0,
         tempo_preparacao=0,
@@ -80,7 +80,7 @@ def item_nao_vegano(ingrediente_vegano, ingrediente_nao_vegano):
 @pytest.fixture()
 def item_sem_ingrediente():
     item = Item.objects.create(
-        nome='a',
+        nome='c',
         descricao='a',
         preco=0,
         tempo_preparacao=0,
